@@ -7,7 +7,7 @@ from cryptography_pmf.cryptosystem.abstract import CryptoSystem
 from mod import Mod
 
 
-class PlayfairEncryptor(CryptoSystem):
+class PlayfairCypher(CryptoSystem):
     class InvalidInputError(Exception):
         ...
 
