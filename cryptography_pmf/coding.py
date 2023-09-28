@@ -1,30 +1,25 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from cryptography_pmf.commons import ALPHABET
+from cryptography_pmf.commons import ALPHABET, reduce_str_to_alphabet
 
 
 class EncoderDecoder(ABC):
+    @abstractmethod
     def encode(self, x: str) -> list[Any]:
-        x = self._clean_input(x)
-        return self._encode(x)
-
-    @abstractmethod
-    def _encode(self, x: str) -> list[Any]:
         ...
 
+    @abstractmethod
     def decode(self, y: list[Any]) -> str:
-        return self._decode(y)
-
-    @abstractmethod
-    def _decode(self, y: list[Any]) -> str:
         ...
 
-    @staticmethod
-    def _clean_input(x: str) -> str:
-        alpha_str = "".join(filter(str.isalpha, x))
-        upper_alpha_str = alpha_str.upper()
-        return upper_alpha_str
+
+class DefaultCharListEncoderDecoder(EncoderDecoder):
+    def encode(self, x: str) -> list[str]:
+        return list(x)
+
+    def decode(self, y: list[str]) -> str:
+        return "".join(y)
 
 
 class Z26EncoderDecoder(EncoderDecoder):
@@ -35,10 +30,11 @@ class Z26EncoderDecoder(EncoderDecoder):
             num: char for char, num in self.__char_encode_map.items()
         }
 
-    def _encode(self, x: str) -> list[int]:
+    def encode(self, x: str) -> list[int]:
+        x = reduce_str_to_alphabet(x)
         return [self.__char_encode_map[char] for char in x]
 
-    def _decode(self, y: list[int]) -> str:
+    def decode(self, y: list[int]) -> str:
         chars = [self.__char_decode_map[n] for n in y]
         original = "".join(chars)
         return original

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Optional
 
-from cryptography_pmf.coding import EncoderDecoder, Z26EncoderDecoder
+from cryptography_pmf.coding import DefaultCharListEncoderDecoder, EncoderDecoder
 from cryptography_pmf.commons import ALPHABET
 
 
@@ -17,7 +17,7 @@ class CryptoSystem(ABC):
         encoder_decoder: Optional[EncoderDecoder] = None,
     ):
         if encoder_decoder is None:
-            encoder_decoder = Z26EncoderDecoder()
+            encoder_decoder = DefaultCharListEncoderDecoder()
         self.default_key = default_key
         self._encoder_decoder = encoder_decoder
 
